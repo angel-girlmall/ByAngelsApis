@@ -523,11 +523,16 @@ async function updateCierreConfig(configData) {
 const DEFAULT_DESCUENTOS_CONFIG = [
   {
     id: 'rango_1',
-    nombre: '',
-    rangoInicio: '',
-    rangoFin: '',
+    nombre: 'súper descuento 3x S/100',
+    rangoInicio: 0,
+    rangoFin: 999,
     activo: true,
-    escalones: []
+    escalones: [
+      {
+        cantidadMinima: 3,
+        precioOferta: 33.33
+      }
+    ]
   }
 ];
 

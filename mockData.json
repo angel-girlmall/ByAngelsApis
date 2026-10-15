@@ -172,5 +172,20 @@
       "51928391496"
     ],
     "indiceActual": 0
-  }
+  },
+  "descuentosConfig": [
+    {
+      "id": "rango_1",
+      "nombre": "súper descuento 3x S/100",
+      "rangoInicio": 0,
+      "rangoFin": 999,
+      "activo": true,
+      "escalones": [
+        {
+          "cantidadMinima": 3,
+          "precioOferta": 33.33
+        }
+      ]
+    }
+  ]
 }
