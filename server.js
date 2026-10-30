@@ -79,18 +79,22 @@ app.get('/api/pinterest-video', async (req, res) => {
       return res.json({ videoUrl: cleanUrl });
     }
     
-    // 2. .m3u8 HLS stream URL
+    // 2. .m3u8 HLS stream URL -> automatically convert to MP4 for universal browser playback
     const m3u8Match = html.match(/(https?:\\\/\\\/v\d*\.pinimg\.com\\\/videos\\\/[^\s"'\\>]+\.m3u8|https?:\/\/v\d*\.pinimg\.com\/videos\/[^\s"'\\>]+\.m3u8)/i);
     if (m3u8Match && m3u8Match[0]) {
       const cleanUrl = m3u8Match[0].replace(/\\/g, '');
-      console.log(`[Pinterest Parser] Successfully extracted HLS .m3u8: ${cleanUrl}`);
-      return res.json({ videoUrl: cleanUrl });
+      const directMp4 = cleanUrl.replace('/hls/', '/expMp4/').replace('.m3u8', '_720w.mp4');
+      console.log(`[Pinterest Parser] Extracted HLS .m3u8, converted to direct MP4: ${directMp4}`);
+      return res.json({ videoUrl: directMp4, originalHls: cleanUrl });
     }
 
     // 3. Fallback search inside JSON data script tags
     const urlInJson = html.match(/https?:\/\/v\d*\.pinimg\.com\/videos\/[^\s"'\\>]+\.(mp4|m3u8)/i);
     if (urlInJson && urlInJson[0]) {
-      const cleanUrl = urlInJson[0].replace(/\\/g, '');
+      let cleanUrl = urlInJson[0].replace(/\\/g, '');
+      if (cleanUrl.endsWith('.m3u8')) {
+        cleanUrl = cleanUrl.replace('/hls/', '/expMp4/').replace('.m3u8', '_720w.mp4');
+      }
       console.log(`[Pinterest Parser] Successfully extracted video from JSON metadata: ${cleanUrl}`);
       return res.json({ videoUrl: cleanUrl });
     }
